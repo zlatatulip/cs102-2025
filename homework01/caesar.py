@@ -11,7 +11,12 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    s = [range(ord('A'), ord('Z') + 1), range(ord('a'), ord('z') + 1), range(ord('А'), ord('Я') + 1), range(ord('а'), ord('я') + 1)]
+    s = [
+        range(ord("A"), ord("Z") + 1),
+        range(ord("a"), ord("z") + 1),
+        range(ord("А"), ord("Я") + 1),
+        range(ord("а"), ord("я") + 1),
+    ]
     for i in plaintext:
         t1 = ord(i)
         t2 = ord(i) + shift
@@ -42,7 +47,12 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     ''
     """
     plaintext = ""
-    s = [range(ord('A'), ord('Z') + 1), range(ord('a'), ord('z') + 1), range(ord('А'), ord('Я') + 1), range(ord('а'), ord('я') + 1)]
+    s = [
+        range(ord("A"), ord("Z") + 1),
+        range(ord("a"), ord("z") + 1),
+        range(ord("А"), ord("Я") + 1),
+        range(ord("а"), ord("я") + 1),
+    ]
     for i in ciphertext:
         t1 = ord(i)
         t2 = ord(i) - shift
