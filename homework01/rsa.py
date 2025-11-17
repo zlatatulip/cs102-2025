@@ -12,6 +12,8 @@ def is_prime(n: int) -> bool:
     >>> is_prime(8)
     False
     """
+    if n < 2:
+        return False
     t = [1] * (n + 1)
     for i in range(2, (n + 1) // 2 + 1):
         if t[i]:
