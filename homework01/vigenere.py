@@ -16,7 +16,7 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
         range(ord("а"), ord("я") + 1),
     ]
     for n, i in enumerate(plaintext):
-        shift = ord(keyword[n % len(keyword)].upper()) - ord('A')
+        shift = ord(keyword[n % len(keyword)].upper()) - ord("A")
         t1 = ord(i)
         t2 = ord(i) + shift
         flag = 0
@@ -51,7 +51,7 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
         range(ord("а"), ord("я") + 1),
     ]
     for n, i in enumerate(ciphertext):
-        shift = ord(keyword[n % len(keyword)].upper()) - ord('A')
+        shift = ord(keyword[n % len(keyword)].upper()) - ord("A")
         t1 = ord(i)
         t2 = ord(i) - shift
         flag = 0
