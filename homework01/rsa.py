@@ -13,9 +13,9 @@ def is_prime(n: int) -> bool:
     False
     """
     t = [1] * (n + 1)
-    for i in range(2, n + 2):
+    for i in range(2, (n + 1) // 2 + 1):
         if t[i]:
-            for j in range(i * 2, n + 2, i):
+            for j in range(i * 2, n + 1, i):
                 t[j] = 0
     return t[n]
 
@@ -28,8 +28,9 @@ def gcd(a: int, b: int) -> int:
     >>> gcd(3, 7)
     1
     """
-    # PUT YOUR CODE HERE
-    pass
+    if a * b == 0:
+        return a + b
+    return gcd(b, a % b)
 
 
 def multiplicative_inverse(e: int, phi: int) -> int:
@@ -39,8 +40,22 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
-    # PUT YOUR CODE HERE
-    pass
+    a = e
+    b = phi
+    s = []
+    k = 0
+    while a % b != 0:
+        s.append((a, b))
+        a, b = b, a % b
+        k += 1
+    x = 0
+    y = 1
+    for i in range(k):
+        a, b = s.pop(-1)
+        x, y = y, x - y * (a // b)
+    if x < 0:
+        x += phi
+    return x
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
@@ -50,10 +65,10 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
         raise ValueError("p and q cannot be equal")
 
     # n = pq
-    # PUT YOUR CODE HERE
+    n = p * q
 
     # phi = (p-1)(q-1)
-    # PUT YOUR CODE HERE
+    phi = (p - 1) * (q - 1)
 
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
