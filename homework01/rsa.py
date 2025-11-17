@@ -17,7 +17,7 @@ def is_prime(n: int) -> bool:
         if t[i]:
             for j in range(i * 2, n + 1, i):
                 t[j] = 0
-    return t[n]
+    return bool(t[n])
 
 
 def gcd(a: int, b: int) -> int:
