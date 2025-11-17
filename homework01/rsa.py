@@ -12,8 +12,12 @@ def is_prime(n: int) -> bool:
     >>> is_prime(8)
     False
     """
-    # PUT YOUR CODE HERE
-    pass
+    t = [1] * (n + 1)
+    for i in range(2, n + 2):
+        if t[i]:
+            for j in range(i * 2, n + 2, i):
+                t[j] = 0
+    return t[n]
 
 
 def gcd(a: int, b: int) -> int:
