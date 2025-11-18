@@ -1,6 +1,3 @@
-import typing as tp
-
-
 def encrypt_affine(plaintext: str, a: int, b: int, m: int) -> str:
     """
     Encrypts plaintext using a Vigenere cipher.
