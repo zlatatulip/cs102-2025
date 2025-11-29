@@ -197,7 +197,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
         if x == 0:
             break
         grid[i[0]][i[1]] = "."
-        t = t - set(i)
+        t = t - {i, None}
         x -= 1
     return grid
 
