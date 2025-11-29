@@ -97,7 +97,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     for i in range(n):
         for j in range(n):
             if grid[i][j] == '.':
-                return (i, j)
+                return i, j
     return None
 
 
@@ -137,17 +137,35 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     if not t:
         return grid
     else:
-        for i in find_possible_values(grid, t):
-            prev = grid[t[0]][t[1]]
-            grid[t[0]][t[1]] = i
-            solve(grid)
-            grid[t[0]][t[1]] = prev
+        grid1 = grid[::]
+        for i in find_possible_values(grid1, t):
+            prev = grid1[t[0]][t[1]]
+            grid1[t[0]][t[1]] = i
+            ans = solve(grid1)
+            if ans:
+                return ans
+            grid1[t[0]][t[1]] = prev
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
     # TODO: Add doctests with bad puzzles
-    pass
+    n = len(solution)
+    for i in range(n):
+        t = set(get_row(solution, (i, 0))) | set(solution[i][0])
+        if len(t) < 9:
+            return False
+    for i in range(n):
+        t = set(get_col(solution, (0, i))) | set(solution[0][i])
+        if len(t) < 9:
+            return False
+    m = 3
+    for i in range(m):
+        for j in range(m):
+            t = set(get_block(solution, (i * m, j * m))) | set(solution[i * m][j * m])
+            if len(t) < 9:
+                return False
+    return True
 
 
 def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
@@ -171,7 +189,18 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     >>> check_solution(solution)
     True
     """
-    pass
+    n = 9
+    grid = [['.' for i in range(n)] for j in range(n)]
+    grid = solve(grid)
+    t = set([(i, j) for i in range(n) for j in range(n)])
+    x = max(0, n**2 - N)
+    for i in t:
+        if x == 0:
+            break
+        grid[i[0]][i[1]] = '.'
+        t = t - set(i)
+        x -= 1
+    return grid
 
 
 if __name__ == "__main__":
