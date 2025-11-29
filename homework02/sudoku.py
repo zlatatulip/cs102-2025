@@ -5,7 +5,7 @@ T = tp.TypeVar("T")
 
 
 def read_sudoku(path: tp.Union[str, pathlib.Path]) -> tp.List[tp.List[str]]:
-    """ Прочитать Судоку из указанного файла """
+    """Прочитать Судоку из указанного файла"""
     path = pathlib.Path(path)
     with path.open() as f:
         puzzle = f.read()
@@ -19,15 +19,11 @@ def create_grid(puzzle: str) -> tp.List[tp.List[str]]:
 
 
 def display(grid: tp.List[tp.List[str]]) -> None:
-    """Вывод Судоку """
+    """Вывод Судоку"""
     width = 2
     line = "+".join(["-" * (width * 3)] * 3)
     for row in range(9):
-        print(
-            "".join(
-                grid[row][col].center(width) + ("|" if str(col) in "25" else "") for col in range(9)
-            )
-        )
+        print("".join(grid[row][col].center(width) + ("|" if str(col) in "25" else "") for col in range(9)))
         if str(row) in "25":
             print(line)
     print()
@@ -96,7 +92,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     n = len(grid)
     for i in range(n):
         for j in range(n):
-            if grid[i][j] == '.':
+            if grid[i][j] == ".":
                 return i, j
     return None
 
@@ -116,13 +112,13 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     func = [get_row, get_col, get_block]
     for f in func:
         t = f(grid, pos)
-        t = set(t) - set('.')
+        t = set(t) - set(".")
         s = s - t
     return s
 
 
 def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
-    """ Решение пазла, заданного в grid """
+    """Решение пазла, заданного в grid"""
     """ Как решать Судоку?
         1. Найти свободную позицию
         2. Найти все возможные значения, которые могут находиться на этой позиции
@@ -148,7 +144,7 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
-    """ Если решение solution верно, то вернуть True, в противном случае False """
+    """Если решение solution верно, то вернуть True, в противном случае False"""
     # TODO: Add doctests with bad puzzles
     n = len(solution)
     for i in range(n):
@@ -190,14 +186,14 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     True
     """
     n = 9
-    grid = [['.' for i in range(n)] for j in range(n)]
+    grid = [["." for i in range(n)] for j in range(n)]
     grid = solve(grid)
     t = set([(i, j) for i in range(n) for j in range(n)])
     x = max(0, n**2 - N)
     for i in t:
         if x == 0:
             break
-        grid[i[0]][i[1]] = '.'
+        grid[i[0]][i[1]] = "."
         t = t - set(i)
         x -= 1
     return grid
