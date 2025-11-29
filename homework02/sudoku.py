@@ -111,8 +111,8 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     s = set(map(str, range(1, 10)))
     func = [get_row, get_col, get_block]
     for f in func:
-        t = f(grid, pos)
-        t = set(t) - set(".")
+        t = set(f(grid, pos))
+        t = t - set(".")
         s = s - t
     return s
 
@@ -141,6 +141,7 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
             if ans:
                 return ans
             grid1[t[0]][t[1]] = prev
+    return None
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
@@ -187,7 +188,9 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     """
     n = 9
     grid = [["." for i in range(n)] for j in range(n)]
-    grid = solve(grid)
+    solution = solve(grid)
+    if solution:
+        grid = solution
     t = set([(i, j) for i in range(n) for j in range(n)])
     x = max(0, n**2 - N)
     for i in t:
