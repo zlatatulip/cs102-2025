@@ -112,7 +112,7 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     True
     """
     n = len(grid)
-    s = set(range(1, 10))
+    s = set(map(str, range(1, 10)))
     func = [get_row, get_col, get_block]
     for f in func:
         t = f(grid, pos)
@@ -137,7 +137,7 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     if not t:
         return grid
     else:
-        for i in t:
+        for i in find_possible_values(grid, t):
             prev = grid[t[0]][t[1]]
             grid[t[0]][t[1]] = i
             solve(grid)
