@@ -162,8 +162,8 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
             return False
     m = 3
     for k in range(m):
-        for j in range(m):
-            t = set(get_block(solution, (k * m, j * m))) | set(solution[k * m][j * m])
+        for q in range(m):
+            t = set(get_block(solution, (k * m, q * m))) | set(solution[k * m][q * m])
             if len(t) < 9:
                 return False
     return True
