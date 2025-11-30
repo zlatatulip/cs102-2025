@@ -152,18 +152,18 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
             if j == ".":
                 return False
     n = len(solution)
-    for i in range(n):
-        t = set(get_row(solution, (i, 0))) | set(solution[i][0])
+    for k in range(n):
+        t = set(get_row(solution, (k, 0))) | set(solution[k][0])
         if len(t) < 9:
             return False
-    for i in range(n):
-        t = set(get_col(solution, (0, i))) | set(solution[0][i])
+    for k in range(n):
+        t = set(get_col(solution, (0, k))) | set(solution[0][k])
         if len(t) < 9:
             return False
     m = 3
-    for i in range(m):
+    for k in range(m):
         for j in range(m):
-            t = set(get_block(solution, (i * m, j * m))) | set(solution[i * m][j * m])
+            t = set(get_block(solution, (k * m, j * m))) | set(solution[k * m][j * m])
             if len(t) < 9:
                 return False
     return True
