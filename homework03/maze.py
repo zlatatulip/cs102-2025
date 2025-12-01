@@ -9,9 +9,7 @@ def create_grid(rows: int = 15, cols: int = 15) -> List[List[Union[str, int]]]:
     return [["■"] * cols for _ in range(rows)]
 
 
-def remove_wall(
-    grid: List[List[Union[str, int]]], coord: Tuple[int, int]
-) -> List[List[Union[str, int]]]:
+def remove_wall(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) -> List[List[Union[str, int]]]:
     """
 
     :param grid:
@@ -19,12 +17,12 @@ def remove_wall(
     :return:
     """
 
-    pass
+    grid1 = deepcopy(grid)
+    grid1[coord[0]][coord[1]] = " "
+    return grid1
 
 
-def bin_tree_maze(
-    rows: int = 15, cols: int = 15, random_exit: bool = True
-) -> List[List[Union[str, int]]]:
+def bin_tree_maze(rows: int = 15, cols: int = 15, random_exit: bool = True) -> List[List[Union[str, int]]]:
     """
 
     :param rows:
@@ -50,14 +48,36 @@ def bin_tree_maze(
 
     # генерация входа и выхода
     if random_exit:
-        x_in, x_out = randint(0, rows - 1), randint(0, rows - 1)
-        y_in = randint(0, cols - 1) if x_in in (0, rows - 1) else choice((0, cols - 1))
-        y_out = randint(0, cols - 1) if x_out in (0, rows - 1) else choice((0, cols - 1))
+        x_in, x_out = choice(range(1, rows - 1, 2)), choice(range(1, rows - 1, 2))
+        y_in = choice(range(1, rows - 1, 2)) if x_in in (0, rows - 1) else choice((0, cols - 1))
+        y_out = choice(range(1, rows - 1, 2)) if x_out in (0, rows - 1) else choice((0, cols - 1))
     else:
         x_in, y_in = 0, cols - 2
         x_out, y_out = rows - 1, 1
 
     grid[x_in][y_in], grid[x_out][y_out] = "X", "X"
+    for x_start in range(1, rows, 2):
+        for y_start in range(1, cols, 2):
+            t = randint(0, 1)
+            if t:
+                y_next = y_start + 2
+                if y_next >= cols - 1:
+                    y_next -= 2
+                    x_next = x_start - 2
+                    if x_next <= 0:
+                        continue
+                else:
+                    x_next = x_start
+            else:
+                x_next = x_start - 2
+                if x_next <= 0:
+                    x_next += 2
+                    y_next = y_start + 2
+                    if y_next >= cols - 1:
+                        continue
+                else:
+                    y_next = y_start
+            grid = remove_wall(grid, ((x_next + x_start) // 2, (y_next + y_start) // 2))
 
     return grid
 
@@ -69,7 +89,14 @@ def get_exits(grid: List[List[Union[str, int]]]) -> List[Tuple[int, int]]:
     :return:
     """
 
-    pass
+    exits = []
+    rows = len(grid)
+    cols = len(grid[0])
+    for x in range(rows):
+        for y in range(cols):
+            if grid[x][y] == "X":
+                exits.append((x, y))
+    return exits
 
 
 def make_step(grid: List[List[Union[str, int]]], k: int) -> List[List[Union[str, int]]]:
@@ -80,19 +107,67 @@ def make_step(grid: List[List[Union[str, int]]], k: int) -> List[List[Union[str,
     :return:
     """
 
-    pass
+    grid1 = deepcopy(grid)
+    rows = len(grid)
+    cols = len(grid[0])
+    for x in range(rows):
+        for y in range(cols):
+            if grid1[x][y] == k:
+                if x - 1 < 0:
+                    if grid1[x][y] != 1:
+                        return grid1
+                elif not grid1[x - 1][y]:
+                    grid1[x - 1][y] = k + 1
+
+                if x + 1 >= rows:
+                    if grid1[x][y] != 1:
+                        return grid1
+                elif not grid1[x + 1][y]:
+                    grid1[x + 1][y] = k + 1
+
+                if y - 1 < 0:
+                    if grid1[x][y] != 1:
+                        return grid1
+                elif not grid1[x][y - 1]:
+                    grid1[x][y - 1] = k + 1
+
+                if y + 1 >= cols:
+                    if grid1[x][y] != 1:
+                        return grid1
+                elif not grid1[x][y + 1]:
+                    grid1[x][y + 1] = k + 1
+    return make_step(grid1, k + 1)
 
 
 def shortest_path(
     grid: List[List[Union[str, int]]], exit_coord: Tuple[int, int]
-) -> Optional[Union[Tuple[int, int], List[Tuple[int, int]]]]:
+) -> Optional[List[Tuple[int, int]]]:
     """
 
     :param grid:
     :param exit_coord:
     :return:
     """
-    pass
+    rows = len(grid)
+    cols = len(grid[0])
+    x, y = exit_coord[0], exit_coord[1]
+
+    if grid[x][y] == 1:
+        return [(x, y)]
+
+    coords = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+
+    for coord in coords:
+        if coord[0] < 0 or coord[0] >= rows or coord[1] < 0 or coord[1] >= cols:
+            continue
+        if int(grid[x][y]) - 1 != grid[coord[0]][coord[1]]:
+            continue
+        x, y = coord[0], coord[1]
+        t = shortest_path(grid, (x, y))
+        if t:
+            if len(t) + 1 == grid[exit_coord[0]][exit_coord[1]]:
+                return [(x, y)] + t
+    return None
 
 
 def encircled_exit(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) -> bool:
@@ -103,7 +178,21 @@ def encircled_exit(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) ->
     :return:
     """
 
-    pass
+    rows = len(grid)
+    cols = len(grid[0])
+    x, y = coord[0], coord[1]
+    k = 0
+    if x - 1 >= 0:
+        k += grid[x - 1][y] == " "
+    if x + 1 < rows:
+        k += grid[x + 1][y] == " "
+    if y - 1 >= 0:
+        k += grid[x][y - 1] == " "
+    if y + 1 < cols:
+        k += grid[x][y + 1] == " "
+    if k:
+        return False
+    return True
 
 
 def solve_maze(
@@ -115,7 +204,24 @@ def solve_maze(
     :return:
     """
 
-    pass
+    exits = get_exits(grid)
+    if len(exits) != 2:
+        return grid, exits[0]
+    for ex in exits:
+        if encircled_exit(grid, ex):
+            return grid, None
+    rows = len(grid)
+    cols = len(grid[0])
+    grid1 = deepcopy(grid)
+    for x in range(rows):
+        for y in range(cols):
+            if grid1[x][y] == " " or grid1[x][y] == "X":
+                grid1[x][y] = 0
+    grid1[exits[0][0]][exits[0][1]] = 1
+    grid1 = make_step(grid1, 1)
+    print(pd.DataFrame(grid1))
+    path = shortest_path(grid1, exits[1])
+    return grid, path
 
 
 def add_path_to_grid(
