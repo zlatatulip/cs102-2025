@@ -52,8 +52,8 @@ def bin_tree_maze(rows: int = 15, cols: int = 15, random_exit: bool = True) -> L
         y_in = choice(range(1, rows - 1, 2)) if x_in in (0, rows - 1) else choice((0, cols - 1))
         y_out = choice(range(1, rows - 1, 2)) if x_out in (0, rows - 1) else choice((0, cols - 1))
     else:
-        x_in, y_in = 0, cols - 2
-        x_out, y_out = rows - 1, 1
+        x_in, y_in = rows - 2, 0
+        x_out, y_out = 1, cols - 1
 
     grid[x_in][y_in], grid[x_out][y_out] = "X", "X"
     for x_start in range(1, rows, 2):
@@ -139,9 +139,7 @@ def make_step(grid: List[List[Union[str, int]]], k: int) -> List[List[Union[str,
     return make_step(grid1, k + 1)
 
 
-def shortest_path(
-    grid: List[List[Union[str, int]]], exit_coord: Tuple[int, int]
-) -> Optional[List[Tuple[int, int]]]:
+def shortest_path(grid: List[List[Union[str, int]]], exit_coord: Tuple[int, int]) -> Optional[List[Tuple[int, int]]]:
     """
 
     :param grid:
@@ -162,8 +160,8 @@ def shortest_path(
             continue
         if int(grid[x][y]) - 1 != grid[coord[0]][coord[1]]:
             continue
-        x, y = coord[0], coord[1]
-        t = shortest_path(grid, (x, y))
+        x1, y1 = coord[0], coord[1]
+        t = shortest_path(grid, (x1, y1))
         if t:
             if len(t) + 1 == grid[exit_coord[0]][exit_coord[1]]:
                 return [(x, y)] + t
