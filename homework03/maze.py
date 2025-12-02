@@ -1,5 +1,5 @@
 from copy import deepcopy
-from random import choice, randint
+from random import choice, randint, seed
 from typing import List, Optional, Tuple, Union
 
 import pandas as pd
@@ -18,7 +18,28 @@ def remove_wall(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) -> Li
     """
 
     grid1 = deepcopy(grid)
-    grid1[coord[0]][coord[1]] = " "
+    cols = len(grid[0])
+    x, y = coord
+    t = randint(0, 1)
+    if t:
+        y_next = y + 2
+        if y_next >= cols - 1:
+            y_next -= 2
+            x_next = x - 2
+            if x_next <= 0:
+                return grid1
+        else:
+            x_next = x
+    else:
+        x_next = x - 2
+        if x_next <= 0:
+            x_next += 2
+            y_next = y + 2
+            if y_next >= cols - 1:
+                return grid1
+        else:
+            y_next = y
+    grid1[(x + x_next) // 2][(y + y_next) // 2] = " "
     return grid1
 
 
@@ -48,36 +69,17 @@ def bin_tree_maze(rows: int = 15, cols: int = 15, random_exit: bool = True) -> L
 
     # генерация входа и выхода
     if random_exit:
-        x_in, x_out = choice(range(1, rows - 1, 2)), choice(range(1, rows - 1, 2))
-        y_in = choice(range(1, rows - 1, 2)) if x_in in (0, rows - 1) else choice((0, cols - 1))
-        y_out = choice(range(1, rows - 1, 2)) if x_out in (0, rows - 1) else choice((0, cols - 1))
+        x_in, x_out = randint(0, rows - 1), randint(0, rows - 1)
+        y_in = randint(0, cols - 1) if x_in in (0, rows - 1) else choice((0, cols - 1))
+        y_out = randint(0, cols - 1) if x_out in (0, rows - 1) else choice((0, cols - 1))
     else:
-        x_in, y_in = rows - 2, 0
-        x_out, y_out = 1, cols - 1
+        x_in, y_in = 0, cols - 2
+        x_out, y_out = rows - 1, 1
 
     grid[x_in][y_in], grid[x_out][y_out] = "X", "X"
     for x_start in range(1, rows, 2):
         for y_start in range(1, cols, 2):
-            t = randint(0, 1)
-            if t:
-                y_next = y_start + 2
-                if y_next >= cols - 1:
-                    y_next -= 2
-                    x_next = x_start - 2
-                    if x_next <= 0:
-                        continue
-                else:
-                    x_next = x_start
-            else:
-                x_next = x_start - 2
-                if x_next <= 0:
-                    x_next += 2
-                    y_next = y_start + 2
-                    if y_next >= cols - 1:
-                        continue
-                else:
-                    y_next = y_start
-            grid = remove_wall(grid, ((x_next + x_start) // 2, (y_next + y_start) // 2))
+            grid = remove_wall(grid, (x_start, y_start))
 
     return grid
 
@@ -148,7 +150,7 @@ def shortest_path(grid: List[List[Union[str, int]]], exit_coord: Tuple[int, int]
     """
     rows = len(grid)
     cols = len(grid[0])
-    x, y = exit_coord[0], exit_coord[1]
+    x, y = exit_coord
 
     if grid[x][y] == 1:
         return [(x, y)]
@@ -160,7 +162,7 @@ def shortest_path(grid: List[List[Union[str, int]]], exit_coord: Tuple[int, int]
             continue
         if int(grid[x][y]) - 1 != grid[coord[0]][coord[1]]:
             continue
-        x1, y1 = coord[0], coord[1]
+        x1, y1 = coord
         t = shortest_path(grid, (x1, y1))
         if t:
             if len(t) + 1 == grid[exit_coord[0]][exit_coord[1]]:
@@ -178,7 +180,7 @@ def encircled_exit(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) ->
 
     rows = len(grid)
     cols = len(grid[0])
-    x, y = coord[0], coord[1]
+    x, y = coord
     k = 0
     if x - 1 >= 0:
         k += grid[x - 1][y] == " "
@@ -241,8 +243,9 @@ def add_path_to_grid(
 
 
 if __name__ == "__main__":
-    print(pd.DataFrame(bin_tree_maze(15, 15)))
-    GRID = bin_tree_maze(15, 15)
+    seed(42)
+    print(pd.DataFrame(bin_tree_maze(5, 5)))
+    GRID = bin_tree_maze(5, 5)
     print(pd.DataFrame(GRID))
     _, PATH = solve_maze(GRID)
     MAZE = add_path_to_grid(GRID, PATH)
