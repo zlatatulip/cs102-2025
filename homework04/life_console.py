@@ -34,7 +34,7 @@ class Console(UI):
         try:
             while self.life.is_changing and not self.life.is_max_generations_exceeded:
                 key = screen.getch()
-                if key == ord('q') or key == 27:
+                if key == ord('q'):
                     break
 
                 screen.clear()
