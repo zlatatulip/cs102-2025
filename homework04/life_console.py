@@ -9,11 +9,11 @@ class Console(UI):
         super().__init__(life)
 
     def draw_borders(self, screen) -> None:
-        """ Отобразить рамку. """
+        """Отобразить рамку."""
         screen.border(0)
 
     def draw_grid(self, screen) -> None:
-        """ Отобразить состояние клеток. """
+        """Отобразить состояние клеток."""
         data = self.life.curr_generation
         for y in range(self.life.rows):
             for x in range(self.life.cols):
@@ -34,7 +34,7 @@ class Console(UI):
         try:
             while self.life.is_changing and not self.life.is_max_generations_exceeded:
                 key = screen.getch()
-                if key == ord('q'):
+                if key == ord("q"):
                     break
 
                 screen.clear()

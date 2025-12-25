@@ -10,9 +10,7 @@ Grid = tp.List[Cells]
 
 
 class GameOfLife:
-    def __init__(
-        self, width: int = 640, height: int = 480, cell_size: int = 10, speed: int = 10
-    ) -> None:
+    def __init__(self, width: int = 640, height: int = 480, cell_size: int = 10, speed: int = 10) -> None:
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -31,14 +29,14 @@ class GameOfLife:
         self.grid = GameOfLife.create_grid(self, True)
 
     def draw_lines(self) -> None:
-        """ Отрисовать сетку """
+        """Отрисовать сетку"""
         for x in range(0, self.width, self.cell_size):
             pygame.draw.line(self.screen, pygame.Color("snow"), (x, 0), (x, self.height))
         for y in range(0, self.height, self.cell_size):
             pygame.draw.line(self.screen, pygame.Color("snow"), (0, y), (self.width, y))
 
     def run(self) -> None:
-        """ Запустить игру """
+        """Запустить игру"""
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption("Game of Life")
@@ -100,9 +98,9 @@ class GameOfLife:
         for i in range(y):
             for j in range(x):
                 if gr[i][j]:
-                    color = pygame.Color('darkolivegreen3')
+                    color = pygame.Color("darkolivegreen3")
                 else:
-                    color = pygame.Color('lightpink1')
+                    color = pygame.Color("lightpink1")
                 pygame.draw.rect(self.screen, color, (size * j, size * i, self.height, self.width))
         GameOfLife.draw_lines(self)
 
@@ -126,9 +124,14 @@ class GameOfLife:
         """
         y, x = cell
         neighbours = []
-        coords = ((y - 1,  x - 1), (y - 1, x), (y - 1, x + 1),
-                  (y, x - 1), (y, x + 1),
-                  (y + 1, x - 1), (y + 1, x), (y + 1, x + 1))
+        coords = ((y - 1,  x - 1),
+                  (y - 1, x),
+                  (y - 1, x + 1),
+                  (y, x - 1),
+                  (y, x + 1),
+                  (y + 1, x - 1),
+                  (y + 1, x),
+                  (y + 1, x + 1))
         for i, j in coords:
             if 0 <= j < self.cell_width and 0 <= i < self.cell_height:
                 neighbours.append(self.grid[i][j])
