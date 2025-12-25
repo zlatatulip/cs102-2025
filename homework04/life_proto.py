@@ -124,14 +124,15 @@ class GameOfLife:
         """
         y, x = cell
         neighbours = []
-        coords = ((y - 1,  x - 1),
-                  (y - 1, x),
-                  (y - 1, x + 1),
-                  (y, x - 1),
-                  (y, x + 1),
-                  (y + 1, x - 1),
-                  (y + 1, x),
-                  (y + 1, x + 1))
+        coords = ((y - 1, x - 1),
+            (y - 1, x),
+            (y - 1, x + 1),
+            (y, x - 1),
+            (y, x + 1),
+            (y + 1, x - 1),
+            (y + 1, x),
+            (y + 1, x + 1),
+        )
         for i, j in coords:
             if 0 <= j < self.cell_width and 0 <= i < self.cell_height:
                 neighbours.append(self.grid[i][j])

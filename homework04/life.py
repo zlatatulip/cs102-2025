@@ -44,13 +44,14 @@ class GameOfLife:
         y, x = cell
         neighbours = []
         coords = ((y - 1, x - 1),
-                  (y - 1, x),
-                  (y - 1, x + 1),
-                  (y, x - 1),
-                  (y, x + 1),
-                  (y + 1, x - 1),
-                  (y + 1, x),
-                  (y + 1, x + 1))
+            (y - 1, x),
+            (y - 1, x + 1),
+            (y, x - 1),
+            (y, x + 1),
+            (y + 1, x - 1),
+            (y + 1, x),
+            (y + 1, x + 1),
+        )
         for i, j in coords:
             if 0 <= j < self.cols and 0 <= i < self.rows:
                 neighbours.append(self.curr_generation[i][j])
